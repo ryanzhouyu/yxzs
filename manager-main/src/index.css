@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #ff3366;
+  --color-primary-orange: #ec5b13;
+  --color-accent-blue: #00f2ff;
+  --color-accent-purple: #7000ff;
+  --color-dark-charcoal: #121212;
+  --color-card-bg: rgba(25, 25, 25, 0.6);
+  --color-glass-dark: rgba(255, 255, 255, 0.05);
+  --color-slate-custom: #2D343F;
+  --color-slate-dark: #1F242D;
+  --color-background-light: #f8f6f6;
+  --color-background-dark: #221610;
+  
+  --font-display: "Noto Sans SC", sans-serif;
+}
+
+@layer utilities {
+  .glass-card {
+    @apply bg-white/10 backdrop-blur-2xl border border-white/20;
+  }
+  .glass-panel {
+    @apply bg-card-bg backdrop-blur-xl border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)];
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .text-glow {
+    text-shadow: 0 0 20px rgba(255,255,255,0.4);
+  }
+  .bg-glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .vibrant-gradient-1 {
+    background: radial-gradient(circle at 0% 0%, #4f46e5 0%, transparent 50%),
+                radial-gradient(circle at 100% 0%, #ec4899 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, #8b5cf6 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, #06b6d4 0%, transparent 50%),
+                #0f172a;
+  }
+  .active-glow {
+    box-shadow: 0 0 15px rgba(236, 91, 19, 0.4);
+  }
+}
