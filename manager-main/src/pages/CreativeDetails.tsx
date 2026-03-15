@@ -1,5 +1,8 @@
 import { useNavigate } from 'react-router-dom';
+import PageHeader from '../components/PageHeader';
+import TopicCard from '../components/TopicCard';
 import HeatIcon from '../assets/heat-icon.svg';
+import { topicCards } from '../data/topicCards';
 
 type StatItemProps = {
   icon: string;
@@ -23,71 +26,37 @@ type HotContentItemProps = {
   imgSrc: string;
 };
 
-type TopicCardProps = {
-  title: string;
-  type: string;
-  duration: string;
-  description: string;
-  imgSrc: string;
-  isFirst: boolean;
-};
-
-const topics: TopicCardProps[] = [
-  {
-    title: '同事互相吐槽，最后彼此加油',
-    type: '短视频',
-    duration: '30-60秒',
-    description: '展示同事之间互相吐槽工作中的烦恼，最后互相鼓励加油，传递正能量',
-    imgSrc: 'https://picsum.photos/seed/colleague-talk/600/400',
-    isFirst: true
-  },
-  {
-    title: '打工人心情变化',
-    type: '短视频',
-    duration: '20-40秒',
-    description: '用表情和动作展示打工人从周一到周五的心情变化',
-    imgSrc: 'https://picsum.photos/seed/mood-change/600/400',
-    isFirst: false
-  },
-  {
-    title: '老板说的 vs 实际做的',
-    type: '短视频',
-    duration: '25-45秒',
-    description: '对比老板说的话和员工实际做的事情，制造幽默反差',
-    imgSrc: 'https://picsum.photos/seed/boss-vs-real/600/400',
-    isFirst: false
-  }
-];
-
 export default function CreativeDetails() {
   const navigate = useNavigate();
 
   return (
     <div className="app-page min-h-screen pb-24 overflow-y-auto hide-scrollbar relative">
-      <header className="absolute top-0 left-0 w-full pt-4 pb-8 px-6 z-50 bg-gradient-to-b from-black/60 to-transparent">
-        <div className="flex justify-between items-start">
-        <button type="button" onClick={() => navigate(-1)} className="w-10 h-10 flex items-center justify-center rounded-full glass-card icon-button" aria-label="返回">
-            <span className="material-symbols-outlined text-white">arrow_back_ios_new</span>
-          </button>
-          <div className="text-center">
-            <h1 className="title-1 text-glow">创意详情</h1>
-            <div className="flex items-center gap-2 mt-1 justify-center">
-              <span className="text-xs font-medium text-white/70">10月6日 星期一</span>
-              <span className="w-1 h-1 rounded-full bg-white/40"></span>
-              <span className="text-xs font-medium text-white/90">早上好，创作者</span>
-            </div>
-          </div>
-        <button type="button" className="w-10 h-10 flex items-center justify-center rounded-full glass-card icon-button" aria-label="分享">
-            <span className="material-symbols-outlined text-white">share</span>
-          </button>
-        </div>
-      </header>
+      <PageHeader
+        title="创意详情"
+        centered
+        leftAction={{
+          icon: 'arrow_back_ios_new',
+          ariaLabel: '返回',
+          onClick: () => navigate(-1),
+        }}
+        rightAction={{
+          icon: 'share',
+          ariaLabel: '分享',
+        }}
+      />
 
       <main className="px-4 space-y-6 pb-10 pt-20">
         <section className="relative radius-card overflow-hidden shadow-2xl bg-black aspect-[3/4]">
-          <img alt="Hero Image" className="w-full h-full object-cover opacity-80" src="https://picsum.photos/seed/office-worker/1080/1920" referrerPolicy="no-referrer" />
+          <img
+            alt="Hero Image"
+            className="w-full h-full object-cover opacity-80"
+            src="https://picsum.photos/seed/office-worker/1080/1920"
+            referrerPolicy="no-referrer"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
-          <div className="absolute top-4 right-4 glass-card px-3 py-1 radius-control text-xs text-white/90">创意视频</div>
+          <div className="absolute top-4 right-4 glass-card px-3 py-1 radius-control text-xs text-white/90">
+            创意视频
+          </div>
           <div className="absolute bottom-4 left-4 right-4 glass-panel radius-panel p-4 text-white/95">
             <div className="flex items-center justify-between mb-3">
               <div>
@@ -99,11 +68,9 @@ export default function CreativeDetails() {
               </div>
               <div className="text-right">
                 <div className="flex items-center justify-end gap-0.5 mb-1">
-                  <img src={HeatIcon} alt="star" className="w-4 h-4" />
-                  <img src={HeatIcon} alt="star" className="w-4 h-4" />
-                  <img src={HeatIcon} alt="star" className="w-4 h-4" />
-                  <img src={HeatIcon} alt="star" className="w-4 h-4" />
-                  <img src={HeatIcon} alt="star" className="w-4 h-4" />
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <img key={index} src={HeatIcon} alt="star" className="w-4 h-4" />
+                  ))}
                 </div>
                 <span className="text-2xl font-semibold">5.0</span>
               </div>
@@ -139,7 +106,9 @@ export default function CreativeDetails() {
               <div className="w-1.5 h-6 bg-blue-500 rounded-full"></div>
               <h2 className="title-2">7天播放量趋势</h2>
             </div>
-            <button type="button" className="glass-card px-2 py-1 radius-control text-xs text-white/70">近7天</button>
+            <button type="button" className="glass-card px-2 py-1 radius-control text-xs text-white/70">
+              近7天
+            </button>
           </div>
           <div className="h-40 relative mb-4 bg-white/5 radius-panel p-3">
             <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 50">
@@ -195,7 +164,7 @@ export default function CreativeDetails() {
             <h2 className="title-2 text-white">推荐选题</h2>
           </div>
           <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2 px-1">
-            {topics.map((topic) => (
+            {topicCards.map((topic) => (
               <TopicCard key={topic.title} {...topic} />
             ))}
           </div>
@@ -203,7 +172,11 @@ export default function CreativeDetails() {
       </main>
 
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-50 glass-nav px-6 py-3 border-t border-white/10 flex items-center justify-center">
-        <button type="button" onClick={() => navigate('/topics')} className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 radius-control font-bold text-lg shadow-lg shadow-purple-500/20 active:scale-95 transition-transform flex items-center justify-center gap-2">
+        <button
+          type="button"
+          onClick={() => navigate('/topics')}
+          className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 radius-control font-bold text-lg shadow-lg shadow-purple-500/20 active:scale-95 transition-transform flex items-center justify-center gap-2"
+        >
           <span className="material-symbols-outlined">magic_button</span>
           使用这个创意，生成内容
         </button>
@@ -240,7 +213,11 @@ function HotContentItem({ platform, type, views, heat, title, imgSrc }: HotConte
       </div>
       <div className="flex-1">
         <div className="flex items-center gap-2 mb-2">
-          <span className={`text-xs px-2 py-0.5 radius-control ${platform === '抖音' ? 'bg-blue-500/20 text-blue-400' : 'bg-red-500/20 text-red-400'}`}>
+          <span
+            className={`text-xs px-2 py-0.5 radius-control ${
+              platform === '抖音' ? 'bg-blue-500/20 text-blue-400' : 'bg-red-500/20 text-red-400'
+            }`}
+          >
             {platform}
           </span>
           <span className="text-xs px-2 py-0.5 radius-control bg-gray-700/50 text-gray-300">
@@ -261,44 +238,6 @@ function HotContentItem({ platform, type, views, heat, title, imgSrc }: HotConte
           </div>
           <span className="material-symbols-outlined text-xs text-gray-400">chevron_right</span>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function TopicCard({ title, type, duration, description, imgSrc, isFirst }: TopicCardProps) {
-  return (
-    <div className={`glass-card radius-panel p-4 text-white min-w-[280px] max-w-[280px] flex-shrink-0 ${isFirst ? 'ring-2 ring-green-500/50' : ''}`}>
-      <div className="flex gap-3 mb-3">
-        <div className="w-20 h-20 radius-control overflow-hidden shrink-0">
-          <img alt={title} className="w-full h-full object-cover" src={imgSrc} referrerPolicy="no-referrer" />
-        </div>
-        <div className="flex-1">
-          {isFirst && (
-            <div className="inline-block mb-1 bg-green-500/20 text-green-400 text-xs px-2 py-0.5 radius-control">
-              推荐
-            </div>
-          )}
-          <h3 className="title-3 mb-1 text-sm">{title}</h3>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs px-2 py-0.5 radius-control bg-purple-500/20 text-purple-400">
-              {type}
-            </span>
-            <span className="text-xs px-2 py-0.5 radius-control bg-gray-700/50 text-gray-300">
-              {duration}
-            </span>
-          </div>
-        </div>
-      </div>
-      <p className="text-xs text-gray-400 line-clamp-2 mb-3">{description}</p>
-      <div className="flex gap-2">
-        <button type="button" className="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-2 radius-control font-semibold text-sm active:scale-95 transition-transform flex items-center justify-center gap-1">
-          <span className="material-symbols-outlined text-base">play_circle</span>
-          生成内容
-        </button>
-        <button type="button" className="w-10 h-10 flex items-center justify-center radius-control bg-white/10 active:scale-95 transition-transform" aria-label="收藏">
-          <span className="material-symbols-outlined text-white">bookmark_border</span>
-        </button>
       </div>
     </div>
   );

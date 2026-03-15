@@ -1,5 +1,4 @@
-import { Fragment, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 type AnalysisCardProps = {
   title: string;
@@ -151,21 +150,29 @@ const calendarDays: CalendarDayProps[] = [
 type AppState = 'intro' | 'authorizing' | 'analyzing' | 'dashboard';
 
 export default function MarketingAssistant() {
-  const navigate = useNavigate();
   const [appState, setAppState] = useState<AppState>('intro');
   const [activeTab, setActiveTab] = useState<'analysis' | 'plan' | 'reports'>('analysis');
+  const now = new Date();
+  const dateLabel = now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+  const greeting = now.getHours() < 12 ? '早上好' : now.getHours() < 18 ? '下午好' : '晚上好';
 
   const handleAuthorize = () => {
     setAppState('authorizing');
-    // 模拟授权过程
-    setTimeout(() => {
-      setAppState('analyzing');
-      // 模拟分析过程
-      setTimeout(() => {
-        setAppState('dashboard');
-      }, 2000);
-    }, 1000);
   };
+
+  useEffect(() => {
+    if (appState !== 'authorizing' && appState !== 'analyzing') {
+      return undefined;
+    }
+
+    const timeout = window.setTimeout(() => {
+      setAppState((prev) => (prev === 'authorizing' ? 'analyzing' : 'dashboard'));
+    }, appState === 'authorizing' ? 1000 : 2000);
+
+    return () => {
+      window.clearTimeout(timeout);
+    };
+  }, [appState]);
 
   if (appState === 'intro') {
     return (
@@ -175,10 +182,10 @@ export default function MarketingAssistant() {
             <div>
               <h1 className="title-1 text-glow">营销助手</h1>
               <div className="flex items-center gap-2 mt-1">
-                <span className="text-xs font-medium text-white/70">{new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                <span className="text-xs font-medium text-white/70">{dateLabel}</span>
                 <span className="w-1 h-1 rounded-full bg-white/40"></span>
                 <span className="text-xs font-medium text-white/90">
-                  {new Date().getHours() < 12 ? '早上好' : new Date().getHours() < 18 ? '下午好' : '晚上好'}，酒店运营者
+                  {greeting}，酒店运营者
                 </span>
               </div>
             </div>
@@ -315,10 +322,10 @@ export default function MarketingAssistant() {
           <div>
             <h1 className="title-1 text-glow">营销助手</h1>
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-xs font-medium text-white/70">{new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              <span className="text-xs font-medium text-white/70">{dateLabel}</span>
               <span className="w-1 h-1 rounded-full bg-white/40"></span>
               <span className="text-xs font-medium text-white/90">
-                {new Date().getHours() < 12 ? '早上好' : new Date().getHours() < 18 ? '下午好' : '晚上好'}，酒店运营者
+                {greeting}，酒店运营者
               </span>
             </div>
           </div>
@@ -362,9 +369,7 @@ export default function MarketingAssistant() {
               <h2 className="title-2 mb-6">酒店社交媒体分析</h2>
               <div className="grid grid-cols-2 gap-4">
                 {analysisData.map((item) => (
-                  <Fragment key={item.title}>
-                    <AnalysisCard {...item} />
-                  </Fragment>
+                  <AnalysisCard key={item.title} {...item} />
                 ))}
               </div>
               <div className="mt-6 pt-6 border-t border-white/10">
@@ -415,9 +420,7 @@ export default function MarketingAssistant() {
               <h2 className="title-2">策略建议</h2>
               <div className="grid grid-cols-1 gap-4">
                 {strategyData.map((strategy) => (
-                  <Fragment key={strategy.title}>
-                    <StrategyCard {...strategy} />
-                  </Fragment>
+                  <StrategyCard key={strategy.title} {...strategy} />
                 ))}
               </div>
             </section>
@@ -437,9 +440,7 @@ export default function MarketingAssistant() {
                 </div>
                 <div className="grid grid-cols-7 gap-2">
                   {calendarDays.map((day) => (
-                    <Fragment key={day.date}>
-                      <CalendarDay {...day} />
-                    </Fragment>
+                    <CalendarDay key={day.date} {...day} />
                   ))}
                 </div>
               </div>
@@ -500,9 +501,7 @@ export default function MarketingAssistant() {
             </div>
             <div className="space-y-3">
               {reports.map((report) => (
-                <Fragment key={report.id}>
-                  <ReportCard {...report} />
-                </Fragment>
+                <ReportCard key={report.id} {...report} />
               ))}
             </div>
             <div className="glass-card radius-card p-5 text-center">
@@ -566,7 +565,7 @@ function StrategyCard({ title, description, icon, tags }: StrategyCardProps) {
   );
 }
 
-function ReportCard({ id, title, date, status, views }: ReportCardProps) {
+function ReportCard({ title, date, status, views }: ReportCardProps) {
   return (
     <div className="glass-card radius-card p-4 flex items-center justify-between">
       <div>

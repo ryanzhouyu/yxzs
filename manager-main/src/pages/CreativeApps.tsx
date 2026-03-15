@@ -1,3 +1,5 @@
+import PageHeader from '../components/PageHeader';
+
 type AppCardProps = {
   title: string;
   desc: string;
@@ -16,21 +18,7 @@ type RecentAppProps = {
 export default function CreativeApps() {
   return (
     <div className="app-page relative">
-      <header className="absolute top-0 left-0 w-full pt-4 pb-8 px-6 z-50 bg-gradient-to-b from-black/60 to-transparent">
-        <div className="flex justify-between items-start">
-          <div>
-            <h1 className="title-1 text-glow">创意应用</h1>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="text-xs font-medium text-white/70">10月6日 星期一</span>
-              <span className="w-1 h-1 rounded-full bg-white/40"></span>
-              <span className="text-xs font-medium text-white/90">早上好，创作者</span>
-            </div>
-          </div>
-          <button type="button" className="w-10 h-10 rounded-full glass-card icon-button flex items-center justify-center" aria-label="通知">
-            <span className="material-symbols-outlined text-xl">notifications</span>
-          </button>
-        </div>
-      </header>
+      <PageHeader title="创意应用" />
 
       <main className="h-full w-full overflow-y-auto hide-scrollbar px-6 pb-32 pt-20">
         <div className="grid grid-cols-2 gap-4 mt-4">
@@ -88,8 +76,14 @@ export default function CreativeApps() {
 function AppCard({ title, desc, icon, colorFrom, colorTo, glowFrom, glowTo }: AppCardProps) {
   return (
     <div className="bg-glass radius-card p-5 border border-white/10 shadow-xl relative overflow-hidden group">
-      <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full blur-2xl opacity-40" style={{ background: `linear-gradient(to bottom right, ${glowFrom}, ${glowTo})` }}></div>
-      <div className="w-12 h-12 mb-4 radius-control p-[1.5px] relative z-10" style={{ background: `linear-gradient(to bottom right, ${colorFrom}, ${colorTo})` }}>
+      <div
+        className="absolute -right-6 -top-6 w-24 h-24 rounded-full blur-2xl opacity-40"
+        style={{ background: `linear-gradient(to bottom right, ${glowFrom}, ${glowTo})` }}
+      ></div>
+      <div
+        className="w-12 h-12 mb-4 radius-control p-[1.5px] relative z-10"
+        style={{ background: `linear-gradient(to bottom right, ${colorFrom}, ${colorTo})` }}
+      >
         <div className="w-full h-full bg-black/60 backdrop-blur-md radius-control flex items-center justify-center">
           <span className="material-symbols-outlined text-2xl text-white">{icon}</span>
         </div>
@@ -112,4 +106,3 @@ function RecentApp({ icon, label }: RecentAppProps) {
     </div>
   );
 }
-
