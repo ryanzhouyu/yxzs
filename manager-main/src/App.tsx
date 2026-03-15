@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+﻿import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import BottomNav from './components/BottomNav';
 import Discover from './pages/Discover';
 import IndustryHotspots from './pages/IndustryHotspots';
@@ -11,8 +11,8 @@ import ContentTopics from './pages/ContentTopics';
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="bg-black min-h-screen flex justify-center font-display text-white overflow-hidden">
-        <div className="w-full max-w-[430px] h-[100dvh] relative overflow-hidden bg-black flex flex-col shadow-2xl">
+      <div className="app-shell min-h-screen flex justify-center font-display text-white overflow-hidden">
+        <div className="w-full max-w-[430px] h-[100dvh] relative overflow-hidden app-device flex flex-col rounded-[28px]">
           <Routes>
             <Route path="/" element={<Discover />} />
             <Route path="/hotspots" element={<IndustryHotspots />} />
@@ -28,3 +28,5 @@ export default function App() {
     </BrowserRouter>
   );
 }
+
+
