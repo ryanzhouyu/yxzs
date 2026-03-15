@@ -26,7 +26,7 @@ export default function CreativeApps() {
               <span className="text-xs font-medium text-white/90">早上好，创作者</span>
             </div>
           </div>
-          <button type="button" className="w-10 h-10 rounded-full glass-card flex items-center justify-center" aria-label="通知">
+          <button type="button" className="w-10 h-10 rounded-full glass-card icon-button flex items-center justify-center" aria-label="通知">
             <span className="material-symbols-outlined text-xl">notifications</span>
           </button>
         </div>
@@ -112,5 +112,4 @@ function RecentApp({ icon, label }: RecentAppProps) {
     </div>
   );
 }
-
 

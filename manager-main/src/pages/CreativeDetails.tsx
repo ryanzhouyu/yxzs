@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import HeatIcon from '../assets/heat-icon.svg';
 
 type StatItemProps = {
   icon: string;
@@ -22,6 +23,42 @@ type HotContentItemProps = {
   imgSrc: string;
 };
 
+type TopicCardProps = {
+  title: string;
+  type: string;
+  duration: string;
+  description: string;
+  imgSrc: string;
+  isFirst: boolean;
+};
+
+const topics: TopicCardProps[] = [
+  {
+    title: '同事互相吐槽，最后彼此加油',
+    type: '短视频',
+    duration: '30-60秒',
+    description: '展示同事之间互相吐槽工作中的烦恼，最后互相鼓励加油，传递正能量',
+    imgSrc: 'https://picsum.photos/seed/colleague-talk/600/400',
+    isFirst: true
+  },
+  {
+    title: '打工人心情变化',
+    type: '短视频',
+    duration: '20-40秒',
+    description: '用表情和动作展示打工人从周一到周五的心情变化',
+    imgSrc: 'https://picsum.photos/seed/mood-change/600/400',
+    isFirst: false
+  },
+  {
+    title: '老板说的 vs 实际做的',
+    type: '短视频',
+    duration: '25-45秒',
+    description: '对比老板说的话和员工实际做的事情，制造幽默反差',
+    imgSrc: 'https://picsum.photos/seed/boss-vs-real/600/400',
+    isFirst: false
+  }
+];
+
 export default function CreativeDetails() {
   const navigate = useNavigate();
 
@@ -29,7 +66,7 @@ export default function CreativeDetails() {
     <div className="app-page min-h-screen pb-24 overflow-y-auto hide-scrollbar relative">
       <header className="absolute top-0 left-0 w-full pt-4 pb-8 px-6 z-50 bg-gradient-to-b from-black/60 to-transparent">
         <div className="flex justify-between items-start">
-          <button type="button" onClick={() => navigate(-1)} className="w-10 h-10 flex items-center justify-center rounded-full glass-card" aria-label="返回">
+        <button type="button" onClick={() => navigate(-1)} className="w-10 h-10 flex items-center justify-center rounded-full glass-card icon-button" aria-label="返回">
             <span className="material-symbols-outlined text-white">arrow_back_ios_new</span>
           </button>
           <div className="text-center">
@@ -40,37 +77,38 @@ export default function CreativeDetails() {
               <span className="text-xs font-medium text-white/90">早上好，创作者</span>
             </div>
           </div>
-          <button type="button" className="w-10 h-10 flex items-center justify-center rounded-full glass-card" aria-label="分享">
+        <button type="button" className="w-10 h-10 flex items-center justify-center rounded-full glass-card icon-button" aria-label="分享">
             <span className="material-symbols-outlined text-white">share</span>
           </button>
         </div>
       </header>
 
-      <main className="px-4 space-y-4 pb-10 pt-20">
+      <main className="px-4 space-y-6 pb-10 pt-20">
         <section className="relative radius-card overflow-hidden shadow-2xl bg-black aspect-[3/4]">
           <img alt="Hero Image" className="w-full h-full object-cover opacity-80" src="https://picsum.photos/seed/office-worker/1080/1920" referrerPolicy="no-referrer" />
-          <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md px-3 py-1 radius-control text-xs text-white">创意视频</div>
-          <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent text-white">
-            <div className="flex items-end justify-between mb-4">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+          <div className="absolute top-4 right-4 glass-card px-3 py-1 radius-control text-xs text-white/90">创意视频</div>
+          <div className="absolute bottom-4 left-4 right-4 glass-panel radius-panel p-4 text-white/95">
+            <div className="flex items-center justify-between mb-3">
               <div>
-                <div className="flex items-center space-x-2 text-3xl font-bold">
+                <div className="flex items-center gap-2 text-3xl font-semibold">
                   <span className="material-symbols-outlined">play_circle</span>
                   <span>420万</span>
                 </div>
-                <p className="text-sm opacity-70">总播放量</p>
+                <p className="text-xs text-white/70 mt-1">总播放量</p>
               </div>
               <div className="text-right">
-                <div className="flex text-yellow-400 mb-1 text-sm">
-                  <span className="material-symbols-outlined fill-current">star</span>
-                  <span className="material-symbols-outlined fill-current">star</span>
-                  <span className="material-symbols-outlined fill-current">star</span>
-                  <span className="material-symbols-outlined fill-current">star</span>
-                  <span className="material-symbols-outlined fill-current">star</span>
+                <div className="flex items-center justify-end gap-0.5 mb-1">
+                  <img src={HeatIcon} alt="star" className="w-4 h-4" />
+                  <img src={HeatIcon} alt="star" className="w-4 h-4" />
+                  <img src={HeatIcon} alt="star" className="w-4 h-4" />
+                  <img src={HeatIcon} alt="star" className="w-4 h-4" />
+                  <img src={HeatIcon} alt="star" className="w-4 h-4" />
                 </div>
-                <span className="text-2xl font-bold">5.0</span>
+                <span className="text-2xl font-semibold">5.0</span>
               </div>
             </div>
-            <div className="flex justify-between border-t border-white/20 pt-4 text-center">
+            <div className="grid grid-cols-4 gap-2 border-t border-white/15 pt-3 text-center">
               <StatItem icon="favorite" value="120万" label="点赞" />
               <StatItem icon="chat_bubble" value="120万" label="评论" />
               <StatItem icon="bookmark" value="收藏" label="收藏" />
@@ -85,7 +123,7 @@ export default function CreativeDetails() {
             <h2 className="title-2">创意核心内容</h2>
           </div>
           <h3 className="title-2 mb-3">工作日创意短片</h3>
-          <p className="text-sm text-gray-300 leading-relaxed mb-6">
+          <p className="text-sm text-white/70 leading-relaxed mb-6">
             工作日创意短片主要以职场视角切入一天的工作内容，在轻松吐槽的同时，展示企业文化或服务。这类反差感叙事很容易引发年轻职场人的共鸣，从而带来二次传播。
           </p>
           <div className="flex flex-wrap gap-2">
@@ -101,9 +139,9 @@ export default function CreativeDetails() {
               <div className="w-1.5 h-6 bg-blue-500 rounded-full"></div>
               <h2 className="title-2">7天播放量趋势</h2>
             </div>
-            <button type="button" className="text-xs border border-gray-500 px-2 py-1 radius-control text-gray-300">近7天</button>
+            <button type="button" className="glass-card px-2 py-1 radius-control text-xs text-white/70">近7天</button>
           </div>
-          <div className="h-40 relative mb-4">
+          <div className="h-40 relative mb-4 bg-white/5 radius-panel p-3">
             <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 50">
               <path d="M0,45 Q10,40 20,20 T40,25 T60,10 T80,15 T100,5" fill="none" stroke="#8B5CF6" strokeWidth="2"></path>
               <path d="M0,40 Q15,45 30,35 T50,30 T70,35 T90,20 T100,25" fill="none" opacity="0.8" stroke="#F97316" strokeDasharray="3,1" strokeWidth="1.5"></path>
@@ -150,6 +188,18 @@ export default function CreativeDetails() {
             />
           </div>
         </section>
+
+        <section className="mb-4">
+          <div className="flex items-center space-x-2 mb-4 px-2">
+            <div className="w-1.5 h-6 bg-green-500 rounded-full"></div>
+            <h2 className="title-2 text-white">推荐选题</h2>
+          </div>
+          <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2 px-1">
+            {topics.map((topic) => (
+              <TopicCard key={topic.title} {...topic} />
+            ))}
+          </div>
+        </section>
       </main>
 
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-50 glass-nav px-6 py-3 border-t border-white/10 flex items-center justify-center">
@@ -164,19 +214,19 @@ export default function CreativeDetails() {
 
 function StatItem({ icon, value, label }: StatItemProps) {
   return (
-    <div>
-      <div className="mb-1 material-symbols-outlined">{icon}</div>
-      <div className="text-sm font-bold">{value}</div>
-      <div className="text-[10px] opacity-60">{label}</div>
+    <div className="flex flex-col items-center gap-1">
+      <div className="material-symbols-outlined text-base text-white/80">{icon}</div>
+      <div className="text-[13px] font-semibold text-white/95">{value}</div>
+      <div className="text-[10px] text-white/55">{label}</div>
     </div>
   );
 }
 
 function GridStat({ label, value, trend, trendColor }: GridStatProps) {
   return (
-    <div className="radius-panel p-4 text-center bg-white/5 border border-white/10">
-      <p className="text-xs mb-1 text-gray-400">{label}</p>
-      <p className="text-lg font-bold text-white">{value}</p>
+    <div className="glass-card radius-panel p-4 text-center">
+      <p className="text-[11px] mb-1 text-white/50">{label}</p>
+      <p className="text-lg font-semibold text-white">{value}</p>
       <p className={`text-[10px] ${trendColor}`}>{trend}</p>
     </div>
   );
@@ -184,7 +234,7 @@ function GridStat({ label, value, trend, trendColor }: GridStatProps) {
 
 function HotContentItem({ platform, type, views, heat, title, imgSrc }: HotContentItemProps) {
   return (
-    <div className="flex gap-4 p-3 radius-panel bg-white/5 border border-white/10">
+    <div className="glass-card radius-panel p-3 flex items-center gap-4">
       <div className="w-20 h-20 radius-control overflow-hidden shrink-0">
         <img alt={title} className="w-full h-full object-cover" src={imgSrc} referrerPolicy="no-referrer" />
       </div>
@@ -216,4 +266,40 @@ function HotContentItem({ platform, type, views, heat, title, imgSrc }: HotConte
   );
 }
 
-
+function TopicCard({ title, type, duration, description, imgSrc, isFirst }: TopicCardProps) {
+  return (
+    <div className={`glass-card radius-panel p-4 text-white min-w-[280px] max-w-[280px] flex-shrink-0 ${isFirst ? 'ring-2 ring-green-500/50' : ''}`}>
+      <div className="flex gap-3 mb-3">
+        <div className="w-20 h-20 radius-control overflow-hidden shrink-0">
+          <img alt={title} className="w-full h-full object-cover" src={imgSrc} referrerPolicy="no-referrer" />
+        </div>
+        <div className="flex-1">
+          {isFirst && (
+            <div className="inline-block mb-1 bg-green-500/20 text-green-400 text-xs px-2 py-0.5 radius-control">
+              推荐
+            </div>
+          )}
+          <h3 className="title-3 mb-1 text-sm">{title}</h3>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xs px-2 py-0.5 radius-control bg-purple-500/20 text-purple-400">
+              {type}
+            </span>
+            <span className="text-xs px-2 py-0.5 radius-control bg-gray-700/50 text-gray-300">
+              {duration}
+            </span>
+          </div>
+        </div>
+      </div>
+      <p className="text-xs text-gray-400 line-clamp-2 mb-3">{description}</p>
+      <div className="flex gap-2">
+        <button type="button" className="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-2 radius-control font-semibold text-sm active:scale-95 transition-transform flex items-center justify-center gap-1">
+          <span className="material-symbols-outlined text-base">play_circle</span>
+          生成内容
+        </button>
+        <button type="button" className="w-10 h-10 flex items-center justify-center radius-control bg-white/10 active:scale-95 transition-transform" aria-label="收藏">
+          <span className="material-symbols-outlined text-white">bookmark_border</span>
+        </button>
+      </div>
+    </div>
+  );
+}

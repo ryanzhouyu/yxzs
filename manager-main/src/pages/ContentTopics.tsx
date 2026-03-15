@@ -44,7 +44,7 @@ export default function ContentTopics() {
     <div className="app-page min-h-screen pb-24 overflow-y-auto hide-scrollbar relative">
       <header className="absolute top-0 left-0 w-full pt-4 pb-8 px-6 z-50 bg-gradient-to-b from-black/60 to-transparent">
         <div className="flex justify-between items-start">
-          <button type="button" onClick={() => navigate(-1)} className="w-10 h-10 flex items-center justify-center rounded-full glass-card" aria-label="返回">
+        <button type="button" onClick={() => navigate(-1)} className="w-10 h-10 flex items-center justify-center rounded-full glass-card icon-button" aria-label="返回">
             <span className="material-symbols-outlined text-white">arrow_back_ios_new</span>
           </button>
           <div className="text-center">
@@ -55,7 +55,7 @@ export default function ContentTopics() {
               <span className="text-xs font-medium text-white/90">早上好，创作者</span>
             </div>
           </div>
-          <button type="button" className="w-10 h-10 flex items-center justify-center rounded-full glass-card" aria-label="更多选项">
+        <button type="button" className="w-10 h-10 flex items-center justify-center rounded-full glass-card icon-button" aria-label="更多选项">
             <span className="material-symbols-outlined text-white">more_horiz</span>
           </button>
         </div>
@@ -130,5 +130,4 @@ function TopicCard({ title, type, duration, description, imgSrc, isFirst }: Topi
     </div>
   );
 }
-
 

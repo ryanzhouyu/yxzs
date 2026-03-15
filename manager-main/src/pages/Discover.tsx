@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 import { useNavigate } from 'react-router-dom';
+import HeatIcon from '../assets/heat-icon.svg';
 
 type VideoCardProps = {
   imgSrc: string;
@@ -83,7 +84,7 @@ export default function Discover() {
               <span className="text-xs font-medium text-white/90">早上好，创作者</span>
             </div>
           </div>
-          <button type="button" className="w-10 h-10 rounded-full glass-card flex items-center justify-center" aria-label="通知">
+          <button type="button" className="w-10 h-10 rounded-full glass-card icon-button flex items-center justify-center" aria-label="通知">
             <span className="material-symbols-outlined text-xl">notifications</span>
           </button>
         </div>
@@ -96,14 +97,6 @@ export default function Discover() {
           </Fragment>
         ))}
       </main>
-
-      <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-40">
-        <div className="w-1.5 h-6 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)]"></div>
-        <div className="w-1.5 h-1.5 rounded-full bg-white/30"></div>
-        <div className="w-1.5 h-1.5 rounded-full bg-white/30"></div>
-        <div className="w-1.5 h-1.5 rounded-full bg-white/30"></div>
-        <div className="w-1.5 h-1.5 rounded-full bg-white/30"></div>
-      </div>
     </div>
   );
 }
@@ -140,7 +133,7 @@ function VideoCard({
                 <>
                   <div className="h-10 w-px bg-white/20 mx-2"></div>
                   <div className="flex items-center gap-1 glass-card px-3 py-1.5 radius-control">
-                    <span className="material-symbols-outlined text-yellow-400 text-sm fill-current">star</span>
+                    <img src={HeatIcon} alt="star" className="w-4 h-4" />
                     <span className="text-sm font-bold">{rating}</span>
                   </div>
                 </>
@@ -149,19 +142,19 @@ function VideoCard({
           </div>
           <div className="flex flex-col gap-6 items-center">
             <div className="flex flex-col items-center gap-1 group">
-              <div className="w-12 h-12 rounded-full glass-card flex items-center justify-center group-active:scale-90 transition-transform">
+              <div className="w-12 h-12 rounded-full glass-card icon-button flex items-center justify-center group-active:scale-90 transition-transform">
                 <span className="material-symbols-outlined fill-current text-white">favorite</span>
               </div>
               <span className="text-[10px] font-bold">{likes}</span>
             </div>
             <div className="flex flex-col items-center gap-1">
-              <div className="w-12 h-12 rounded-full glass-card flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full glass-card icon-button flex items-center justify-center">
                 <span className="material-symbols-outlined">chat_bubble</span>
               </div>
               <span className="text-[10px] font-bold">{comments}</span>
             </div>
             <div className="flex flex-col items-center gap-1">
-              <div className="w-12 h-12 rounded-full glass-card flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full glass-card icon-button flex items-center justify-center">
                 <span className="material-symbols-outlined">share</span>
               </div>
               <span className="text-[10px] font-bold">{shares}</span>
@@ -172,5 +165,4 @@ function VideoCard({
     </section>
   );
 }
-
 
