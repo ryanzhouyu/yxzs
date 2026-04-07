@@ -1,11 +1,14 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import SafeImage from '../components/SafeImage';
 import TopicCard from '../components/TopicCard';
 import { topicCards } from '../data/topicCards';
+import { videoCards } from '../data/videoCards';
 
 export default function ContentTopics() {
   const navigate = useNavigate();
+  const { creativeId } = useParams<{ creativeId: string }>();
+  const video = videoCards.find((v) => v.id === creativeId) ?? videoCards[0];
 
   return (
     <div className="app-page relative min-h-screen overflow-y-auto pb-24 hide-scrollbar">
@@ -31,16 +34,16 @@ export default function ContentTopics() {
           </div>
           <div className="relative mb-4 aspect-video overflow-hidden radius-panel bg-black">
             <SafeImage
-              alt="创意缩略图"
+              alt={video.title}
               className="h-full w-full object-cover opacity-80"
-              src="https://picsum.photos/seed/office-worker/800/450"
+              src={video.imgSrc}
             />
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-              <h3 className="title-2">工作日打工人吐槽短片</h3>
+            <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-4">
+              <h3 className="title-2">{video.title}</h3>
             </div>
           </div>
           <p className="text-sm text-gray-300">
-            基于这个创意，为你推荐以下三个可直接生成的内容选题。
+            基于「{video.title}」创意，为你推荐以下三个可直接生成的内容选题。
           </p>
         </section>
 

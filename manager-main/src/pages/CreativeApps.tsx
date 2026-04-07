@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 
 type AppCardProps = {
@@ -8,6 +10,7 @@ type AppCardProps = {
   colorTo: string;
   glowFrom: string;
   glowTo: string;
+  onClick?: () => void;
 };
 
 type RecentAppProps = {
@@ -16,9 +19,23 @@ type RecentAppProps = {
 };
 
 export default function CreativeApps() {
+  const navigate = useNavigate();
+  const [toast, setToast] = useState('');
+
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(''), 2000);
+  };
+
   return (
     <div className="app-page relative">
       <PageHeader title="创意应用" />
+
+      {toast && (
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-[100] glass-card px-5 py-2.5 radius-control text-sm text-white/90 shadow-lg animate-pulse">
+          {toast}
+        </div>
+      )}
 
       <main className="h-full w-full overflow-y-auto hide-scrollbar px-6 pb-32 pt-20">
         <div className="grid grid-cols-2 gap-4 mt-4">
@@ -30,6 +47,7 @@ export default function CreativeApps() {
             colorTo="#ec4899"
             glowFrom="#ec4899"
             glowTo="#8b5cf6"
+            onClick={() => showToast('AI 产品图生成功能即将上线')}
           />
           <AppCard
             title="素材优化"
@@ -39,6 +57,7 @@ export default function CreativeApps() {
             colorTo="#3b82f6"
             glowFrom="#0ea5e9"
             glowTo="#3b82f6"
+            onClick={() => showToast('素材优化功能即将上线')}
           />
           <AppCard
             title="智能选题"
@@ -48,6 +67,7 @@ export default function CreativeApps() {
             colorTo="#d946ef"
             glowFrom="#8b5cf6"
             glowTo="#d946ef"
+            onClick={() => navigate('/details/office-worker')}
           />
           <AppCard
             title="AI 文案优化"
@@ -57,6 +77,7 @@ export default function CreativeApps() {
             colorTo="#10b981"
             glowFrom="#2dd4bf"
             glowTo="#10b981"
+            onClick={() => showToast('AI 文案优化功能即将上线')}
           />
         </div>
 
@@ -73,9 +94,15 @@ export default function CreativeApps() {
   );
 }
 
-function AppCard({ title, desc, icon, colorFrom, colorTo, glowFrom, glowTo }: AppCardProps) {
+function AppCard({ title, desc, icon, colorFrom, colorTo, glowFrom, glowTo, onClick }: AppCardProps) {
   return (
-    <div className="bg-glass radius-card p-5 border border-white/10 shadow-xl relative overflow-hidden group">
+    <div
+      className="bg-glass radius-card p-5 border border-white/10 shadow-xl relative overflow-hidden group cursor-pointer active:scale-95 transition-transform"
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={(e) => { if ((e.key === 'Enter' || e.key === ' ') && onClick) onClick(); }}
+    >
       <div
         className="absolute -right-6 -top-6 w-24 h-24 rounded-full blur-2xl opacity-40"
         style={{ background: `linear-gradient(to bottom right, ${glowFrom}, ${glowTo})` }}

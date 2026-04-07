@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import SafeImage from '../components/SafeImage';
+import PageHeader from '../components/PageHeader';
 
 type CalendarCardProps = {
   day: string;
@@ -18,27 +19,10 @@ type PortfolioCardProps = {
 
 export default function MyCreations() {
   const navigate = useNavigate();
-  const now = new Date();
-  const dateLabel = now.toLocaleDateString('zh-CN', { month: 'long', day: 'numeric', weekday: 'long' });
-  const greeting = now.getHours() < 12 ? '早上好' : now.getHours() < 18 ? '下午好' : '晚上好';
 
   return (
     <div className="app-page min-h-screen text-slate-100 pb-24 overflow-y-auto hide-scrollbar relative">
-      <header className="absolute top-0 left-0 w-full pt-4 pb-8 px-6 z-50 bg-gradient-to-b from-black/60 to-transparent">
-        <div className="flex justify-between items-start">
-          <div>
-            <h1 className="title-1 text-glow">我的创意</h1>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="text-xs font-medium text-white/70">{dateLabel}</span>
-              <span className="w-1 h-1 rounded-full bg-white/40"></span>
-              <span className="text-xs font-medium text-white/90">{greeting}，创作者</span>
-            </div>
-          </div>
-          <button type="button" className="w-10 h-10 rounded-full glass-card icon-button flex items-center justify-center" aria-label="通知">
-            <span className="material-symbols-outlined text-xl">notifications</span>
-          </button>
-        </div>
-      </header>
+      <PageHeader title="我的创意" />
 
       <main className="space-y-8 pt-20">
         <section>

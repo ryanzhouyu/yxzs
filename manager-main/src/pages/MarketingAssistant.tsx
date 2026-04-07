@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import PageHeader from '../components/PageHeader';
 
 type AnalysisCardProps = {
   title: string;
@@ -114,38 +116,33 @@ const reports: ReportCardProps[] = [
   }
 ];
 
-const calendarDays: CalendarDayProps[] = [
-  { date: 1, day: '一', hasContent: false, isToday: false },
-  { date: 2, day: '二', hasContent: false, isToday: false },
-  { date: 3, day: '三', hasContent: true, isToday: false },
-  { date: 4, day: '四', hasContent: false, isToday: false },
-  { date: 5, day: '五', hasContent: true, isToday: false },
-  { date: 6, day: '六', hasContent: false, isToday: false },
-  { date: 7, day: '日', hasContent: true, isToday: false },
-  { date: 8, day: '一', hasContent: false, isToday: false },
-  { date: 9, day: '二', hasContent: false, isToday: false },
-  { date: 10, day: '三', hasContent: true, isToday: false },
-  { date: 11, day: '四', hasContent: false, isToday: false },
-  { date: 12, day: '五', hasContent: false, isToday: false },
-  { date: 13, day: '六', hasContent: true, isToday: false },
-  { date: 14, day: '日', hasContent: false, isToday: false },
-  { date: 15, day: '一', hasContent: true, isToday: true },
-  { date: 16, day: '二', hasContent: false, isToday: false },
-  { date: 17, day: '三', hasContent: true, isToday: false },
-  { date: 18, day: '四', hasContent: false, isToday: false },
-  { date: 19, day: '五', hasContent: false, isToday: false },
-  { date: 20, day: '六', hasContent: true, isToday: false },
-  { date: 21, day: '日', hasContent: false, isToday: false },
-  { date: 22, day: '一', hasContent: false, isToday: false },
-  { date: 23, day: '二', hasContent: true, isToday: false },
-  { date: 24, day: '三', hasContent: false, isToday: false },
-  { date: 25, day: '四', hasContent: false, isToday: false },
-  { date: 26, day: '五', hasContent: true, isToday: false },
-  { date: 27, day: '六', hasContent: false, isToday: false },
-  { date: 28, day: '日', hasContent: false, isToday: false },
-  { date: 29, day: '一', hasContent: true, isToday: false },
-  { date: 30, day: '二', hasContent: false, isToday: false }
-];
+function generateCalendarDays(): CalendarDayProps[] {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const today = now.getDate();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDayOfWeek = new Date(year, month, 1).getDay(); // 0=Sunday
+  const contentDates = new Set([3, 5, 7, 10, 13, 15, 17, 20, 23, 26, 29]);
+
+  const days: CalendarDayProps[] = [];
+
+  // Empty placeholders for days before the 1st
+  for (let i = 0; i < firstDayOfWeek; i++) {
+    days.push({ date: 0, day: '', hasContent: false, isToday: false });
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    days.push({
+      date: d,
+      day: '',
+      hasContent: contentDates.has(d),
+      isToday: d === today,
+    });
+  }
+
+  return days;
+}
 
 type AppState = 'intro' | 'authorizing' | 'analyzing' | 'dashboard' | 'error';
 
@@ -170,13 +167,20 @@ async function analyzeHotelData(signal: AbortSignal): Promise<void> {
   });
 }
 
+const MARKETING_AUTH_KEY = 'marketing_authorized';
+
 export default function MarketingAssistant() {
-  const [appState, setAppState] = useState<AppState>('intro');
+  const navigate = useNavigate();
+  const wasAuthorized = sessionStorage.getItem(MARKETING_AUTH_KEY) === 'true';
+  const [appState, setAppState] = useState<AppState>(wasAuthorized ? 'dashboard' : 'intro');
   const [activeTab, setActiveTab] = useState<'analysis' | 'plan' | 'reports'>('analysis');
+  const [toast, setToast] = useState('');
   const abortRef = useRef<AbortController | null>(null);
-  const now = new Date();
-  const dateLabel = now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
-  const greeting = now.getHours() < 12 ? '早上好' : now.getHours() < 18 ? '下午好' : '晚上好';
+
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(''), 2000);
+  };
 
   const handleAuthorize = () => {
     setAppState('authorizing');
@@ -201,6 +205,7 @@ export default function MarketingAssistant() {
           setAppState('analyzing');
         } else {
           await analyzeHotelData(controller.signal);
+          sessionStorage.setItem(MARKETING_AUTH_KEY, 'true');
           setAppState('dashboard');
         }
       } catch (err) {
@@ -237,20 +242,7 @@ export default function MarketingAssistant() {
   if (appState === 'intro') {
     return (
       <div className="app-page min-h-screen text-slate-100 pb-24 overflow-y-auto hide-scrollbar relative">
-        <header className="absolute top-0 left-0 w-full pt-4 pb-8 px-6 z-50 bg-gradient-to-b from-black/60 to-transparent">
-          <div className="flex justify-between items-start">
-            <div>
-              <h1 className="title-1 text-glow">营销助手</h1>
-              <div className="flex items-center gap-2 mt-1">
-                <span className="text-xs font-medium text-white/70">{dateLabel}</span>
-                <span className="w-1 h-1 rounded-full bg-white/40"></span>
-                <span className="text-xs font-medium text-white/90">
-                  {greeting}，酒店运营者
-                </span>
-              </div>
-            </div>
-          </div>
-        </header>
+        <PageHeader title="营销助手" hideRight />
 
         <main className="px-6 space-y-8 pt-24 flex flex-col items-center justify-center min-h-[80vh]">
           <div className="w-full max-w-md text-center">
@@ -324,13 +316,7 @@ export default function MarketingAssistant() {
   if (appState === 'authorizing') {
     return (
       <div className="app-page min-h-screen text-slate-100 pb-24 overflow-y-auto hide-scrollbar relative">
-        <header className="absolute top-0 left-0 w-full pt-4 pb-8 px-6 z-50 bg-gradient-to-b from-black/60 to-transparent">
-          <div className="flex justify-between items-start">
-            <div>
-              <h1 className="title-1 text-glow">营销助手</h1>
-            </div>
-          </div>
-        </header>
+        <PageHeader title="营销助手" hideSubtitle hideRight />
 
         <main className="px-6 space-y-8 pt-24 flex flex-col items-center justify-center min-h-[80vh]">
           <div className="w-full max-w-md text-center">
@@ -348,13 +334,7 @@ export default function MarketingAssistant() {
   if (appState === 'analyzing') {
     return (
       <div className="app-page min-h-screen text-slate-100 pb-24 overflow-y-auto hide-scrollbar relative">
-        <header className="absolute top-0 left-0 w-full pt-4 pb-8 px-6 z-50 bg-gradient-to-b from-black/60 to-transparent">
-          <div className="flex justify-between items-start">
-            <div>
-              <h1 className="title-1 text-glow">营销助手</h1>
-            </div>
-          </div>
-        </header>
+        <PageHeader title="营销助手" hideSubtitle hideRight />
 
         <main className="px-6 space-y-8 pt-24 flex flex-col items-center justify-center min-h-[80vh]">
           <div className="w-full max-w-md text-center">
@@ -377,23 +357,12 @@ export default function MarketingAssistant() {
 
   return (
     <div className="app-page min-h-screen text-slate-100 pb-24 overflow-y-auto hide-scrollbar relative">
-      <header className="absolute top-0 left-0 w-full pt-4 pb-8 px-6 z-50 bg-gradient-to-b from-black/60 to-transparent">
-        <div className="flex justify-between items-start">
-          <div>
-            <h1 className="title-1 text-glow">营销助手</h1>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="text-xs font-medium text-white/70">{dateLabel}</span>
-              <span className="w-1 h-1 rounded-full bg-white/40"></span>
-              <span className="text-xs font-medium text-white/90">
-                {greeting}，酒店运营者
-              </span>
-            </div>
-          </div>
-          <button type="button" className="w-10 h-10 rounded-full glass-card icon-button flex items-center justify-center" aria-label="通知">
-            <span className="material-symbols-outlined text-xl">notifications</span>
-          </button>
+      {toast && (
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-100 glass-card px-5 py-2.5 radius-control text-sm text-white/90 shadow-lg animate-pulse">
+          {toast}
         </div>
-      </header>
+      )}
+      <PageHeader title="营销助手" />
 
       <main className="px-6 space-y-8 pt-20">
         {/* 导航标签 */}
@@ -439,7 +408,8 @@ export default function MarketingAssistant() {
                 </p>
                 <button
                   type="button"
-                  className="px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full font-semibold text-sm active:scale-95 transition-transform"
+                  className="px-6 py-2 bg-linear-to-r from-purple-600 to-indigo-600 text-white rounded-full font-semibold text-sm active:scale-95 transition-transform"
+                  onClick={() => showToast('分析报告生成中，请稍候...')}
                 >
                   生成详细分析报告
                 </button>
@@ -462,6 +432,7 @@ export default function MarketingAssistant() {
                       <button
                         type="button"
                         className="px-3 py-1 bg-white/5 text-xs rounded-full hover:bg-white/10 transition-colors"
+                        onClick={() => navigate(`/details/office-worker`)}
                       >
                         使用
                       </button>
@@ -499,8 +470,8 @@ export default function MarketingAssistant() {
                   ))}
                 </div>
                 <div className="grid grid-cols-7 gap-2">
-                  {calendarDays.map((day) => (
-                    <CalendarDay key={day.date} {...day} />
+                  {generateCalendarDays().map((day, idx) => (
+                    <CalendarDay key={idx} {...day} onSelect={day.hasContent ? () => showToast(`${day.date}日有内容安排`) : undefined} />
                   ))}
                 </div>
               </div>
@@ -539,7 +510,8 @@ export default function MarketingAssistant() {
               </div>
               <button
                 type="button"
-                className="mt-6 w-full py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full font-semibold text-sm active:scale-95 transition-transform"
+                className="mt-6 w-full py-2 bg-linear-to-r from-purple-600 to-indigo-600 text-white rounded-full font-semibold text-sm active:scale-95 transition-transform"
+                onClick={() => showToast('发布计划生成中，请稍候...')}
               >
                 生成完整发布计划
               </button>
@@ -568,7 +540,8 @@ export default function MarketingAssistant() {
               <p className="text-slate-400 mb-4">需要更多历史数据来生成完整的分析报告</p>
               <button
                 type="button"
-                className="px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full font-semibold text-sm active:scale-95 transition-transform"
+                className="px-6 py-2 bg-linear-to-r from-purple-600 to-indigo-600 text-white rounded-full font-semibold text-sm active:scale-95 transition-transform"
+                onClick={() => showToast('历史数据导入功能即将上线')}
               >
                 导入历史数据
               </button>
@@ -653,11 +626,20 @@ function ReportCard({ title, date, status, views }: ReportCardProps) {
   );
 }
 
-function CalendarDay({ date, day, hasContent, isToday }: CalendarDayProps) {
+function CalendarDay({ date, hasContent, isToday, onSelect }: CalendarDayProps & { onSelect?: () => void }) {
+  if (date === 0) {
+    return <div className="aspect-square" />;
+  }
+
   return (
-    <div className={`aspect-square rounded-lg flex flex-col items-center justify-center transition-all ${isToday ? 'bg-primary-orange text-white' : hasContent ? 'bg-white/5 hover:bg-white/10' : 'hover:bg-white/5'}`}>
+    <div
+      className={`aspect-square rounded-lg flex flex-col items-center justify-center transition-all ${isToday ? 'bg-primary-orange text-white' : hasContent ? 'bg-white/5 hover:bg-white/10 cursor-pointer' : 'hover:bg-white/5'}`}
+      role={onSelect ? 'button' : undefined}
+      tabIndex={onSelect ? 0 : undefined}
+      onClick={onSelect}
+      onKeyDown={onSelect ? (e) => { if (e.key === 'Enter' || e.key === ' ') onSelect(); } : undefined}
+    >
       <span className="text-sm font-medium">{date}</span>
-      <span className="text-xs text-slate-400 mt-1">{day}</span>
       {hasContent && !isToday && (
         <div className="w-1 h-1 rounded-full bg-primary-orange mt-1"></div>
       )}

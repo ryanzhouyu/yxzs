@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import SafeImage from '../components/SafeImage';
 import HeatIcon from '../assets/heat-icon.svg';
+import { videoCards } from '../data/videoCards';
 
 type VideoCardProps = {
   imgSrc: string;
@@ -15,62 +17,6 @@ type VideoCardProps = {
   onClick: () => void;
 };
 
-type VideoCardData = Omit<VideoCardProps, 'onClick'>;
-
-const videoCards: VideoCardData[] = [
-  {
-    imgSrc: 'https://picsum.photos/seed/office-worker/1080/1920',
-    tag: '创意视频',
-    title: '工作日创意短片',
-    views: '420',
-    rating: '5.0',
-    likes: '120万',
-    comments: '120万',
-    shares: '120万',
-  },
-  {
-    imgSrc:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDFWSuSmsTUBDdsBbET-ifFsYiBp0Jh_up0CLozdG6CEke5qTEZ3Gm8pSBGWYzPvgI_LPr2jolz9ky9DO_t3emfLn0hEATHQe_c_-c1YNjc8sS46FceTS5ZV3xpqLcSyLSLcDnwgN2mS8yLMgYuQLicU9zBGYf7o-aBtkc31UOsWrOAy7yFSNKSrO1gT-82lQTSOcQFGKZcPwt038HoWxBeY5nj7H6QoELV7TY8Sqg-K1nfKdqv0y_WiqUQhWSOcdQK5qdCFBStCf7V',
-    tag: '专业设备',
-    title: '打造你的专业工作室',
-    views: '10',
-    rating: '4.8',
-    likes: '8.5万',
-    comments: '1.2万',
-    shares: '3.4万',
-  },
-  {
-    imgSrc: 'https://picsum.photos/seed/creative-idea/1080/1920',
-    tag: '创意教程',
-    title: '如何拍摄创意短视频',
-    views: '89',
-    rating: '4.9',
-    likes: '45万',
-    comments: '3.2万',
-    shares: '12.5万',
-  },
-  {
-    imgSrc: 'https://picsum.photos/seed/marketing/1080/1920',
-    tag: '营销技巧',
-    title: '社交媒体营销新趋势',
-    views: '67',
-    rating: '4.7',
-    likes: '32万',
-    comments: '2.8万',
-    shares: '9.6万',
-  },
-  {
-    imgSrc: 'https://picsum.photos/seed/animation/1080/1920',
-    tag: '动画制作',
-    title: '零基础学动画制作',
-    views: '34',
-    rating: '4.6',
-    likes: '18万',
-    comments: '1.5万',
-    shares: '6.2万',
-  },
-];
-
 export default function Discover() {
   const navigate = useNavigate();
 
@@ -80,7 +26,7 @@ export default function Discover() {
 
       <main className="h-full w-full overflow-y-auto snap-y snap-mandatory hide-scrollbar">
         {videoCards.map((card) => (
-          <VideoCard key={`${card.tag}-${card.title}`} {...card} onClick={() => navigate('/details')} />
+          <VideoCard key={card.id} {...card} onClick={() => navigate(`/details/${card.id}`)} />
         ))}
       </main>
     </div>
@@ -98,6 +44,8 @@ function VideoCard({
   shares,
   onClick,
 }: VideoCardProps) {
+  const [liked, setLiked] = useState(false);
+
   return (
     <section
       className="relative h-full w-full snap-start overflow-hidden cursor-pointer"
@@ -108,7 +56,7 @@ function VideoCard({
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClick(); }}
     >
       <SafeImage alt={title} className="absolute inset-0 w-full h-full object-cover scale-105" src={imgSrc} />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+      <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent"></div>
       <div className="absolute bottom-32 left-0 w-full px-6 flex flex-col gap-6">
         <div className="flex items-end justify-between">
           <div className="flex-1">
@@ -139,11 +87,11 @@ function VideoCard({
             <div className="flex flex-col items-center gap-1">
               <button
                 type="button"
-                aria-label="点赞"
+                aria-label={liked ? '取消点赞' : '点赞'}
                 className="w-12 h-12 rounded-full glass-card icon-button flex items-center justify-center active:scale-90 transition-transform"
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e) => { e.stopPropagation(); setLiked(!liked); }}
               >
-                <span className="material-symbols-outlined fill-current text-white">favorite</span>
+                <span className={`material-symbols-outlined fill-current transition-colors ${liked ? 'text-red-500' : 'text-white'}`}>favorite</span>
               </button>
               <span className="text-[10px] font-bold">{likes}</span>
             </div>

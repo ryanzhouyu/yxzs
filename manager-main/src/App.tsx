@@ -21,9 +21,9 @@ export default function App() {
                 <Route path="/hotspots" element={<IndustryHotspots />} />
                 <Route path="/apps" element={<CreativeApps />} />
                 <Route path="/creations" element={<MyCreations />} />
-                <Route path="/details" element={<CreativeDetails />} />
+                <Route path="/details/:id" element={<CreativeDetails />} />
                 <Route path="/marketing" element={<MarketingAssistant />} />
-                <Route path="/topics" element={<ContentTopics />} />
+                <Route path="/topics/:creativeId" element={<ContentTopics />} />
               </Routes>
             </ErrorBoundary>
             <BottomNav />
