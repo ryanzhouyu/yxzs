@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
+import SafeImage from '../components/SafeImage';
 import HeatIcon from '../assets/heat-icon.svg';
 
 type VideoCardProps = {
@@ -98,8 +99,15 @@ function VideoCard({
   onClick,
 }: VideoCardProps) {
   return (
-    <section className="relative h-full w-full snap-start overflow-hidden cursor-pointer" onClick={onClick}>
-      <img alt={title} className="absolute inset-0 w-full h-full object-cover scale-105" src={imgSrc} referrerPolicy="no-referrer" />
+    <section
+      className="relative h-full w-full snap-start overflow-hidden cursor-pointer"
+      role="button"
+      tabIndex={0}
+      aria-label={`查看「${title}」详情`}
+      onClick={onClick}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClick(); }}
+    >
+      <SafeImage alt={title} className="absolute inset-0 w-full h-full object-cover scale-105" src={imgSrc} />
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
       <div className="absolute bottom-32 left-0 w-full px-6 flex flex-col gap-6">
         <div className="flex items-end justify-between">
@@ -128,22 +136,37 @@ function VideoCard({
             </div>
           </div>
           <div className="flex flex-col gap-6 items-center">
-            <div className="flex flex-col items-center gap-1 group">
-              <div className="w-12 h-12 rounded-full glass-card icon-button flex items-center justify-center group-active:scale-90 transition-transform">
+            <div className="flex flex-col items-center gap-1">
+              <button
+                type="button"
+                aria-label="点赞"
+                className="w-12 h-12 rounded-full glass-card icon-button flex items-center justify-center active:scale-90 transition-transform"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <span className="material-symbols-outlined fill-current text-white">favorite</span>
-              </div>
+              </button>
               <span className="text-[10px] font-bold">{likes}</span>
             </div>
             <div className="flex flex-col items-center gap-1">
-              <div className="w-12 h-12 rounded-full glass-card icon-button flex items-center justify-center">
+              <button
+                type="button"
+                aria-label="评论"
+                className="w-12 h-12 rounded-full glass-card icon-button flex items-center justify-center active:scale-90 transition-transform"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <span className="material-symbols-outlined">chat_bubble</span>
-              </div>
+              </button>
               <span className="text-[10px] font-bold">{comments}</span>
             </div>
             <div className="flex flex-col items-center gap-1">
-              <div className="w-12 h-12 rounded-full glass-card icon-button flex items-center justify-center">
+              <button
+                type="button"
+                aria-label="分享"
+                className="w-12 h-12 rounded-full glass-card icon-button flex items-center justify-center active:scale-90 transition-transform"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <span className="material-symbols-outlined">share</span>
-              </div>
+              </button>
               <span className="text-[10px] font-bold">{shares}</span>
             </div>
           </div>

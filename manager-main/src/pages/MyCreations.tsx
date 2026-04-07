@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import SafeImage from '../components/SafeImage';
 
 type CalendarCardProps = {
   day: string;
@@ -17,6 +18,9 @@ type PortfolioCardProps = {
 
 export default function MyCreations() {
   const navigate = useNavigate();
+  const now = new Date();
+  const dateLabel = now.toLocaleDateString('zh-CN', { month: 'long', day: 'numeric', weekday: 'long' });
+  const greeting = now.getHours() < 12 ? '早上好' : now.getHours() < 18 ? '下午好' : '晚上好';
 
   return (
     <div className="app-page min-h-screen text-slate-100 pb-24 overflow-y-auto hide-scrollbar relative">
@@ -25,9 +29,9 @@ export default function MyCreations() {
           <div>
             <h1 className="title-1 text-glow">我的创意</h1>
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-xs font-medium text-white/70">10月6日 星期一</span>
+              <span className="text-xs font-medium text-white/70">{dateLabel}</span>
               <span className="w-1 h-1 rounded-full bg-white/40"></span>
-              <span className="text-xs font-medium text-white/90">早上好，创作者</span>
+              <span className="text-xs font-medium text-white/90">{greeting}，创作者</span>
             </div>
           </div>
           <button type="button" className="w-10 h-10 rounded-full glass-card icon-button flex items-center justify-center" aria-label="通知">
@@ -72,13 +76,13 @@ export default function MyCreations() {
           </div>
           <div className="grid grid-cols-3 gap-3 px-6">
             <div className="aspect-square glass-card radius-control overflow-hidden">
-              <img alt="灵感收藏1" className="w-full h-full object-cover grayscale hover:grayscale-0 transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbUbBua0qfPRYN8a13JDOnhVeUWORVH3TG2IjRQmCX9tqR-oX3-qLIjSXEwRldogTrl97AO3DPezNVfaMEaUHr9IosHslvhyxiNnfIzrc9oNqhnXD2E2ZH0Le6OGqjQP6Sql9zbAh3mbU-yKH1eVAQkF_CCC9ewSafC3U7tQIIcgSgStrhOCzShE7pHib8Hxp8JYnkfftUpg8krvzDC_8XOtezeqhEln4MuAMXa8MYjOUmgHxHkrubfT85_uYq1PO7NIpy0qCjpH7_" referrerPolicy="no-referrer" />
+              <SafeImage alt="灵感收藏1" className="w-full h-full object-cover grayscale hover:grayscale-0 transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbUbBua0qfPRYN8a13JDOnhVeUWORVH3TG2IjRQmCX9tqR-oX3-qLIjSXEwRldogTrl97AO3DPezNVfaMEaUHr9IosHslvhyxiNnfIzrc9oNqhnXD2E2ZH0Le6OGqjQP6Sql9zbAh3mbU-yKH1eVAQkF_CCC9ewSafC3U7tQIIcgSgStrhOCzShE7pHib8Hxp8JYnkfftUpg8krvzDC_8XOtezeqhEln4MuAMXa8MYjOUmgHxHkrubfT85_uYq1PO7NIpy0qCjpH7_" />
             </div>
             <div className="aspect-square glass-card radius-control overflow-hidden">
-              <img alt="灵感收藏2" className="w-full h-full object-cover grayscale hover:grayscale-0 transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUhInN1E0P7WqsaWiuNxlIRn7m4T2a0fjNXwNxGOf6jpaS0S6CSLcsCzFWw08IlCk1X4A2ij6K_8Gx_JnU2GF5qp061g8bn8rldFjssaT7_aga-qY4sXnZGyV_OYQ8i-I87vNT0viRiOrcSxnLJhNIpu2ZFfKNmWHesryLgKeXjbq2gbOL9JjDVYbLqj0NZdD8sTj_stJlkbfT-g79qgAxo_I1gMSpI86wotIsDg-4G-BM91yLlSgQ_7NFxXjOD5duL2VjHxVrlkTg" referrerPolicy="no-referrer" />
+              <SafeImage alt="灵感收藏2" className="w-full h-full object-cover grayscale hover:grayscale-0 transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUhInN1E0P7WqsaWiuNxlIRn7m4T2a0fjNXwNxGOf6jpaS0S6CSLcsCzFWw08IlCk1X4A2ij6K_8Gx_JnU2GF5qp061g8bn8rldFjssaT7_aga-qY4sXnZGyV_OYQ8i-I87vNT0viRiOrcSxnLJhNIpu2ZFfKNmWHesryLgKeXjbq2gbOL9JjDVYbLqj0NZdD8sTj_stJlkbfT-g79qgAxo_I1gMSpI86wotIsDg-4G-BM91yLlSgQ_7NFxXjOD5duL2VjHxVrlkTg" />
             </div>
             <div className="aspect-square glass-card radius-control overflow-hidden">
-              <img alt="灵感收藏3" className="w-full h-full object-cover grayscale hover:grayscale-0 transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwRrsMTpHmSb-tNgbLWBt-Cgcp-q6-oa_jS2xfPRCGXPz0SirT6oFfxAfS4Qf4RlfFItCoeSOJfiHK265-rkcXZ2cqLY8gZe5Yt6Nfql3_wc3nDbpWp3D9DjH6gfrPC0NThB2M5bk-GS3qcp1_W2Jdjx_DmkjaooABPo2b40U1wF8dTHHppesLjtAqsvAKsDff6qD9HkzqhsovB9Zw6Fx9PlFNEHydsWjp26oMqlqsQQbxUYLOtXvdH9AqlYdACcaI-OGZhHZXp13E" referrerPolicy="no-referrer" />
+              <SafeImage alt="灵感收藏3" className="w-full h-full object-cover grayscale hover:grayscale-0 transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwRrsMTpHmSb-tNgbLWBt-Cgcp-q6-oa_jS2xfPRCGXPz0SirT6oFfxAfS4Qf4RlfFItCoeSOJfiHK265-rkcXZ2cqLY8gZe5Yt6Nfql3_wc3nDbpWp3D9DjH6gfrPC0NThB2M5bk-GS3qcp1_W2Jdjx_DmkjaooABPo2b40U1wF8dTHHppesLjtAqsvAKsDff6qD9HkzqhsovB9Zw6Fx9PlFNEHydsWjp26oMqlqsQQbxUYLOtXvdH9AqlYdACcaI-OGZhHZXp13E" />
             </div>
           </div>
         </section>
@@ -115,7 +119,7 @@ function CalendarCard({ day, title, time, img, active }: CalendarCardProps) {
   return (
     <div className="min-w-[160px] glass-card radius-panel p-3 flex flex-col gap-3">
       <div className={`w-full aspect-[4/5] radius-control overflow-hidden relative ${!active && 'opacity-80'}`}>
-        <img alt={`${day} - ${title}`} className="w-full h-full object-cover" src={img} referrerPolicy="no-referrer" />
+        <SafeImage alt={`${day} - ${title}`} className="w-full h-full object-cover" src={img} />
         <div className={`absolute top-2 left-2 text-white text-[10px] font-bold px-2 py-0.5 radius-control ${active ? 'bg-primary-orange' : 'bg-slate-500'}`}>{day}</div>
       </div>
       <div>
@@ -130,7 +134,7 @@ function PortfolioCard({ title, desc, time, img }: PortfolioCardProps) {
   return (
     <div className="glass-card radius-panel p-4 flex gap-4">
       <div className="w-24 h-24 radius-control overflow-hidden shrink-0">
-        <img alt={title} className="w-full h-full object-cover" src={img} referrerPolicy="no-referrer" />
+        <SafeImage alt={title} className="w-full h-full object-cover" src={img} />
       </div>
       <div className="flex flex-col justify-between py-1 flex-1">
         <div>
@@ -140,8 +144,8 @@ function PortfolioCard({ title, desc, time, img }: PortfolioCardProps) {
         <div className="flex items-center justify-between">
           <span className="text-[10px] text-slate-400">{time}</span>
           <div className="flex gap-2">
-            <span className="material-symbols-outlined text-sm cursor-pointer">share</span>
-            <span className="material-symbols-outlined text-sm cursor-pointer">more_horiz</span>
+            <button type="button" aria-label="分享" className="material-symbols-outlined text-sm cursor-pointer">share</button>
+            <button type="button" aria-label="更多操作" className="material-symbols-outlined text-sm cursor-pointer">more_horiz</button>
           </div>
         </div>
       </div>

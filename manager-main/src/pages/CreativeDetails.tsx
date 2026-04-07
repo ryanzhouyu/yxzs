@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
+import SafeImage from '../components/SafeImage';
 import TopicCard from '../components/TopicCard';
 import HeatIcon from '../assets/heat-icon.svg';
 import { topicCards } from '../data/topicCards';
@@ -47,11 +48,10 @@ export default function CreativeDetails() {
 
       <main className="px-4 space-y-6 pb-10 pt-20">
         <section className="relative radius-card overflow-hidden shadow-2xl bg-black aspect-[3/4]">
-          <img
+          <SafeImage
             alt="Hero Image"
             className="w-full h-full object-cover opacity-80"
             src="https://picsum.photos/seed/office-worker/1080/1920"
-            referrerPolicy="no-referrer"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
           <div className="absolute top-4 right-4 glass-card px-3 py-1 radius-control text-xs text-white/90">
@@ -163,10 +163,12 @@ export default function CreativeDetails() {
             <div className="w-1.5 h-6 bg-green-500 rounded-full"></div>
             <h2 className="title-2 text-white">推荐选题</h2>
           </div>
-          <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2 px-1">
-            {topicCards.map((topic) => (
-              <TopicCard key={topic.title} {...topic} />
-            ))}
+          <div className="-mx-4 overflow-x-auto px-4 pb-2 hide-scrollbar">
+            <div className="flex snap-x snap-mandatory gap-4 pr-4">
+              {topicCards.map((topic) => (
+                <TopicCard key={topic.title} {...topic} />
+              ))}
+            </div>
           </div>
         </section>
       </main>
@@ -209,7 +211,7 @@ function HotContentItem({ platform, type, views, heat, title, imgSrc }: HotConte
   return (
     <div className="glass-card radius-panel p-3 flex items-center gap-4">
       <div className="w-20 h-20 radius-control overflow-hidden shrink-0">
-        <img alt={title} className="w-full h-full object-cover" src={imgSrc} referrerPolicy="no-referrer" />
+        <SafeImage alt={title} className="w-full h-full object-cover" src={imgSrc} />
       </div>
       <div className="flex-1">
         <div className="flex items-center gap-2 mb-2">

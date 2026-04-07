@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type AnalysisCardProps = {
   title: string;
@@ -147,11 +147,33 @@ const calendarDays: CalendarDayProps[] = [
   { date: 30, day: '二', hasContent: false, isToday: false }
 ];
 
-type AppState = 'intro' | 'authorizing' | 'analyzing' | 'dashboard';
+type AppState = 'intro' | 'authorizing' | 'analyzing' | 'dashboard' | 'error';
+
+// TODO: Replace with real API calls via a backend proxy (never expose API keys in frontend code)
+async function fetchHotelData(signal: AbortSignal): Promise<void> {
+  await new Promise<void>((resolve, reject) => {
+    const id = window.setTimeout(resolve, 1000);
+    signal.addEventListener('abort', () => {
+      window.clearTimeout(id);
+      reject(new DOMException('Aborted', 'AbortError'));
+    });
+  });
+}
+
+async function analyzeHotelData(signal: AbortSignal): Promise<void> {
+  await new Promise<void>((resolve, reject) => {
+    const id = window.setTimeout(resolve, 2000);
+    signal.addEventListener('abort', () => {
+      window.clearTimeout(id);
+      reject(new DOMException('Aborted', 'AbortError'));
+    });
+  });
+}
 
 export default function MarketingAssistant() {
   const [appState, setAppState] = useState<AppState>('intro');
   const [activeTab, setActiveTab] = useState<'analysis' | 'plan' | 'reports'>('analysis');
+  const abortRef = useRef<AbortController | null>(null);
   const now = new Date();
   const dateLabel = now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
   const greeting = now.getHours() < 12 ? '早上好' : now.getHours() < 18 ? '下午好' : '晚上好';
@@ -160,19 +182,57 @@ export default function MarketingAssistant() {
     setAppState('authorizing');
   };
 
+  const handleRetry = () => {
+    setAppState('intro');
+  };
+
   useEffect(() => {
     if (appState !== 'authorizing' && appState !== 'analyzing') {
-      return undefined;
+      return;
     }
 
-    const timeout = window.setTimeout(() => {
-      setAppState((prev) => (prev === 'authorizing' ? 'analyzing' : 'dashboard'));
-    }, appState === 'authorizing' ? 1000 : 2000);
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    const run = async () => {
+      try {
+        if (appState === 'authorizing') {
+          await fetchHotelData(controller.signal);
+          setAppState('analyzing');
+        } else {
+          await analyzeHotelData(controller.signal);
+          setAppState('dashboard');
+        }
+      } catch (err) {
+        if (err instanceof DOMException && err.name === 'AbortError') return;
+        console.error('营销助手加载失败:', err);
+        setAppState('error');
+      }
+    };
+
+    run();
 
     return () => {
-      window.clearTimeout(timeout);
+      controller.abort();
     };
   }, [appState]);
+
+  if (appState === 'error') {
+    return (
+      <div className="app-page min-h-screen text-slate-100 flex flex-col items-center justify-center px-6 text-center">
+        <span className="material-symbols-outlined text-5xl text-red-400 mb-4">error</span>
+        <h2 className="title-2 mb-2">加载失败</h2>
+        <p className="text-slate-400 text-sm mb-6">数据获取出现了问题，请稍后重试</p>
+        <button
+          type="button"
+          onClick={handleRetry}
+          className="px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full font-semibold active:scale-95 transition-transform"
+        >
+          重试
+        </button>
+      </div>
+    );
+  }
 
   if (appState === 'intro') {
     return (

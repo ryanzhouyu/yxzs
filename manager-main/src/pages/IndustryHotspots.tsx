@@ -16,6 +16,10 @@ type HotTopicTagProps = {
 };
 
 export default function IndustryHotspots() {
+  const now = new Date();
+  const dateLabel = now.toLocaleDateString('zh-CN', { month: 'long', day: 'numeric', weekday: 'long' });
+  const greeting = now.getHours() < 12 ? '早上好' : now.getHours() < 18 ? '下午好' : '晚上好';
+
   return (
     <div className="app-page relative">
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
@@ -28,9 +32,9 @@ export default function IndustryHotspots() {
           <div>
             <h1 className="title-1 text-glow">行业热点分析</h1>
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-xs font-medium text-white/70">10月6日 星期一</span>
+              <span className="text-xs font-medium text-white/70">{dateLabel}</span>
               <span className="w-1 h-1 rounded-full bg-white/40"></span>
-              <span className="text-xs font-medium text-white/90">早上好，创作者</span>
+              <span className="text-xs font-medium text-white/90">{greeting}，创作者</span>
             </div>
           </div>
           <button type="button" className="w-10 h-10 rounded-full glass-card icon-button flex items-center justify-center" aria-label="通知">
