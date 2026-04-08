@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS saved_inspirations (
+  id       INT AUTO_INCREMENT PRIMARY KEY,
+  user_id  INT          NOT NULL,
+  img_src  VARCHAR(500) NOT NULL,
+  alt_text VARCHAR(200) DEFAULT '',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS ai_works (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  user_id     INT          NOT NULL,
+  title       VARCHAR(200) NOT NULL,
+  description TEXT         NOT NULL,
+  img_src     VARCHAR(500) NOT NULL,
+  created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
