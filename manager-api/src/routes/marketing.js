@@ -12,6 +12,8 @@ router.get('/hot-topics', requireAuth, asyncHandler(ctrl.getHotTopics));
 router.get('/calendar', requireAuth, asyncHandler(ctrl.getCalendar));
 router.get('/publish-suggestions', requireAuth, asyncHandler(ctrl.getPublishSuggestions));
 router.get('/reports', requireAuth, asyncHandler(ctrl.getReports));
-router.post('/reports', requireAuth, validate(['title']), asyncHandler(ctrl.createReport));
+router.post('/reports', requireAuth, validate(['title'], {
+  title: { minLength: 2, maxLength: 200 },
+}), asyncHandler(ctrl.createReport));
 
 module.exports = router;

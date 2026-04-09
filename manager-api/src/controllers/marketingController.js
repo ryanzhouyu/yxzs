@@ -1,5 +1,12 @@
 const pool = require('../config/db');
-const { toCamel, toCamelArray } = require('../utils/toCamel');
+const { toCamelArray } = require('../utils/toCamel');
+
+function parsePagination(req) {
+  const page = Math.max(parseInt(req.query.page || '1', 10), 1);
+  const pageSize = Math.min(Math.max(parseInt(req.query.pageSize || '10', 10), 1), 50);
+  const offset = (page - 1) * pageSize;
+  return { page, pageSize, offset };
+}
 
 exports.getAnalysis = async (req, res) => {
   const [rows] = await pool.query(
@@ -11,35 +18,32 @@ exports.getAnalysis = async (req, res) => {
     return res.json({ data: null });
   }
 
-  const analysis = toCamel(rows[0]);
-
-  // Format into the card structure the frontend expects
+  const analysis = rows[0];
   res.json({
     data: {
       cards: [
-        { title: '社交媒体影响力', value: analysis.socialInfluence, trend: analysis.socialTrend, trendType: analysis.socialTrend.startsWith('+') ? 'up' : 'down', icon: 'trending_up' },
-        { title: '内容互动率', value: analysis.engagementRate, trend: analysis.engagementTrend, trendType: analysis.engagementTrend.startsWith('+') ? 'up' : 'down', icon: 'insert_chart' },
-        { title: '粉丝增长率', value: analysis.followerGrowth, trend: analysis.followerTrend, trendType: analysis.followerTrend.startsWith('+') ? 'up' : 'down', icon: 'groups' },
-        { title: '内容质量评分', value: analysis.contentQuality, trend: analysis.qualityTrend, trendType: analysis.qualityTrend.startsWith('+') ? 'up' : 'down', icon: 'star' },
+        { title: '社交媒体影响力', value: analysis.social_influence, trend: analysis.social_trend, trendType: String(analysis.social_trend).startsWith('+') ? 'up' : 'down', icon: 'trending_up' },
+        { title: '内容互动率', value: analysis.engagement_rate, trend: analysis.engagement_trend, trendType: String(analysis.engagement_trend).startsWith('+') ? 'up' : 'down', icon: 'insert_chart' },
+        { title: '粉丝增长率', value: analysis.follower_growth, trend: analysis.follower_trend, trendType: String(analysis.follower_trend).startsWith('+') ? 'up' : 'down', icon: 'groups' },
+        { title: '内容质量评分', value: analysis.content_quality, trend: analysis.quality_trend, trendType: String(analysis.quality_trend).startsWith('+') ? 'up' : 'down', icon: 'star' },
       ],
-      summary: analysis.analysisSummary,
+      summary: analysis.analysis_summary,
     },
   });
 };
 
 exports.getStrategies = async (_req, res) => {
-  // Static strategy data for demo
   res.json({
     data: [
       {
         title: '宣发策略',
-        description: '基于您酒店的豪华定位，建议采用高端生活方式内容为主，结合季节性促销活动',
+        description: '围绕酒店定位组织高质量社媒内容，优先放大场景感和体验感强的主题。',
         icon: 'campaign',
         tags: ['高端生活方式', '季节性促销', 'KOL合作'],
       },
       {
         title: '内容调性',
-        description: '建议采用优雅、专业的调性，强调酒店的独特卖点和客户体验',
+        description: '建议用专业、克制、质感明确的表达方式，强化品牌辨识度。',
         icon: 'style',
         tags: ['优雅', '专业', '体验导向'],
       },
@@ -51,7 +55,7 @@ exports.getHotTopics = async (_req, res) => {
   res.json({
     data: [
       { topic: '#豪华酒店探店', heat: '95%', match: '98%' },
-      { topic: '#周末度假好去处', heat: '92%', match: '95%' },
+      { topic: '#周末度假去哪里', heat: '92%', match: '95%' },
       { topic: '#城市地标酒店', heat: '88%', match: '90%' },
       { topic: '#商务旅行首选', heat: '85%', match: '87%' },
       { topic: '#酒店美食推荐', heat: '82%', match: '85%' },
@@ -59,7 +63,7 @@ exports.getHotTopics = async (_req, res) => {
   });
 };
 
-exports.getCalendar = async (req, res) => {
+exports.getCalendar = async (_req, res) => {
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth();
@@ -69,15 +73,15 @@ exports.getCalendar = async (req, res) => {
   const contentDates = new Set([3, 5, 7, 10, 13, 15, 17, 20, 23, 26, 29]);
 
   const days = [];
-  for (let i = 0; i < firstDayOfWeek; i++) {
+  for (let i = 0; i < firstDayOfWeek; i += 1) {
     days.push({ date: 0, day: '', hasContent: false, isToday: false });
   }
-  for (let d = 1; d <= daysInMonth; d++) {
+  for (let date = 1; date <= daysInMonth; date += 1) {
     days.push({
-      date: d,
+      date,
       day: '',
-      hasContent: contentDates.has(d),
-      isToday: d === today,
+      hasContent: contentDates.has(date),
+      isToday: date === today,
     });
   }
 
@@ -95,11 +99,16 @@ exports.getPublishSuggestions = async (_req, res) => {
 };
 
 exports.getReports = async (req, res) => {
-  const [rows] = await pool.query(
-    'SELECT * FROM marketing_reports WHERE user_id = ? ORDER BY report_date DESC',
-    [req.user.id]
+  const { page, pageSize, offset } = parsePagination(req);
+  const [[{ total }]] = await pool.query(
+    'SELECT COUNT(*) AS total FROM marketing_reports WHERE user_id = ?',
+    [req.user.id],
   );
-  res.json({ data: toCamelArray(rows) });
+  const [rows] = await pool.query(
+    'SELECT * FROM marketing_reports WHERE user_id = ? ORDER BY report_date DESC LIMIT ? OFFSET ?',
+    [req.user.id, pageSize, offset]
+  );
+  res.json({ data: toCamelArray(rows), total, page, pageSize });
 };
 
 exports.createReport = async (req, res) => {

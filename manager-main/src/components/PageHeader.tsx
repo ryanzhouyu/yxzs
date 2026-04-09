@@ -1,4 +1,7 @@
-import { getGreeting, getDateLabel, USER_ROLE } from '../utils/greeting';
+import { useAuth } from '../contexts/AuthContext';
+import { getDateLabel, getGreeting, USER_ROLE } from '../utils/greeting';
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 type HeaderAction = {
   icon: string;
@@ -12,10 +15,9 @@ type PageHeaderProps = {
   pointerEventsNone?: boolean;
   leftAction?: HeaderAction;
   rightAction?: HeaderAction;
-  /** 隐藏副标题（日期+问候语） */
   hideSubtitle?: boolean;
-  /** 隐藏右侧按钮 */
   hideRight?: boolean;
+  className?: string;
 };
 
 function HeaderIconButton({ icon, ariaLabel, onClick }: HeaderAction) {
@@ -39,9 +41,13 @@ export default function PageHeader({
   rightAction,
   hideSubtitle = false,
   hideRight = false,
+  className,
 }: PageHeaderProps) {
+  const { user, isAuthenticated } = useAuth();
   const dateLabel = getDateLabel({ year: undefined });
   const greeting = getGreeting();
+  const displayName = user?.nickname || user?.username || USER_ROLE;
+  const subtitle = isAuthenticated ? `${greeting}，${displayName}` : `${greeting}，${USER_ROLE}`;
 
   const headerClassName = pointerEventsNone
     ? 'absolute top-0 left-0 w-full pt-4 pb-8 px-6 z-50 bg-linear-to-b from-black/60 to-transparent pointer-events-none'
@@ -51,7 +57,7 @@ export default function PageHeader({
     : 'flex justify-between items-start';
 
   return (
-    <header className={headerClassName}>
+    <header className={twMerge(clsx(headerClassName, className))}>
       <div className={innerClassName}>
         {leftAction ? <HeaderIconButton {...leftAction} /> : centered ? <div className="w-10" /> : <div />}
         <div className={centered ? 'text-center flex-1' : ''}>
@@ -60,7 +66,7 @@ export default function PageHeader({
             <div className={`flex items-center gap-2 mt-1 ${centered ? 'justify-center' : ''}`}>
               <span className="text-xs font-medium text-white/70">{dateLabel}</span>
               <span className="w-1 h-1 rounded-full bg-white/40"></span>
-              <span className="text-xs font-medium text-white/90">{greeting}，{USER_ROLE}</span>
+              <span className="text-xs font-medium text-white/90">{subtitle}</span>
             </div>
           )}
         </div>
@@ -68,8 +74,10 @@ export default function PageHeader({
           centered ? <div className="w-10" /> : <div />
         ) : rightAction ? (
           <HeaderIconButton {...rightAction} />
+        ) : centered ? (
+          <div className="w-10" />
         ) : (
-          <HeaderIconButton icon="notifications" ariaLabel="通知" onClick={() => alert('暂无新通知')} />
+          <div />
         )}
       </div>
     </header>

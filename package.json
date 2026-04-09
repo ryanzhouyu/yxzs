@@ -1,0 +1,30 @@
+{
+  "name": "creative-hub-workspace",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "install:all": "npm --prefix manager-api install && npm --prefix manager-main install",
+    "env:sync": "node scripts/setup.js --env-only",
+    "db:start": "npm --prefix manager-api run db:start",
+    "db:stop": "npm --prefix manager-api run db:stop",
+    "db:logs": "npm --prefix manager-api run db:logs",
+    "db:init": "npm --prefix manager-api run db:init",
+    "db:reset": "npm --prefix manager-api run db:reset",
+    "setup": "node scripts/setup.js",
+    "dev": "concurrently -n api,web -c blue,magenta \"npm run dev:api\" \"npm run dev:web\"",
+    "docker:dev": "docker compose up --build mysql api web",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f mysql api web",
+    "stop": "node scripts/stop.js",
+    "healthcheck": "node scripts/healthcheck.js",
+    "smoke:test": "node scripts/smoke-test.js",
+    "dev:api": "npm --prefix manager-api run dev",
+    "dev:api:watch": "npm --prefix manager-api run dev:watch",
+    "dev:web": "npm --prefix manager-main run dev",
+    "build": "npm --prefix manager-main run build",
+    "typecheck": "npm --prefix manager-main run typecheck"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

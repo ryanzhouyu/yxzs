@@ -4,6 +4,8 @@ import path from 'path';
 import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
+  const proxyTarget = process.env.VITE_PROXY_TARGET || 'http://localhost:4000';
+
   return {
     plugins: [react(), tailwindcss()],
     define: {
@@ -19,8 +21,10 @@ export default defineConfig(() => {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modify — file watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
+      watch: process.env.CHOKIDAR_USEPOLLING === 'true' ? { usePolling: true } : undefined,
+      proxy: {
+        '/api': proxyTarget,
+      },
     },
   };
 });
-
-

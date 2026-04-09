@@ -1,20 +1,33 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# manager-main
 
-# Run and deploy your AI Studio app
+前端开发服务器默认运行在 `http://localhost:3000`。
 
-This contains everything you need to run your app locally.
+## 本地开发
 
-View your app in AI Studio: https://ai.studio/apps/a105186c-79b2-4368-af7c-dca83e8cad26
+```powershell
+npm install
+npm run dev
+```
 
-## Run Locally
+前端通过 `VITE_API_URL` 请求后端，默认使用 `/api`。Vite 开发代理通过 `VITE_PROXY_TARGET` 指向后端服务。
 
-**Prerequisites:**  Node.js
+```env
+VITE_API_URL=/api
+VITE_PROXY_TARGET=http://localhost:4000
+```
 
+## Docker 开发
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+如果你希望前端也在容器里运行，请在仓库根目录执行：
+
+```powershell
+npm run docker:dev
+```
+
+在 Docker 模式下，开发代理会自动切到 `http://api:4000`，不需要手工改配置。
+
+## 协作建议
+
+- 不提交 `dist`、本地 `.env` 和临时日志
+- 接口地址变化时，优先改 `.env.example`
+- 新机器启动流程以仓库根目录 [README](/h:/AI project/yxzs/README.md) 为准

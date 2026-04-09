@@ -1,0 +1,68 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: creative-hub-mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: hotel_creative
+      MYSQL_USER: creative_user
+      MYSQL_PASSWORD: creative_pass
+      TZ: Asia/Shanghai
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  api:
+    build:
+      context: ./manager-api
+    container_name: creative-hub-api
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    env_file:
+      - ./manager-api/.env
+    environment:
+      DB_HOST: mysql
+      CHOKIDAR_USEPOLLING: "true"
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./manager-api:/app
+      - api-node-modules:/app/node_modules
+    command: npm run dev
+
+  web:
+    build:
+      context: ./manager-main
+    container_name: creative-hub-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    env_file:
+      - ./manager-main/.env
+    environment:
+      VITE_PROXY_TARGET: http://api:4000
+      CHOKIDAR_USEPOLLING: "true"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./manager-main:/app
+      - web-node-modules:/app/node_modules
+    command: npm run dev
+
+volumes:
+  mysql-data:
+  api-node-modules:
+  web-node-modules:
